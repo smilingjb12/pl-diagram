@@ -1,0 +1,2374 @@
+<html>
+
+<head>
+    <title>Flowchart Maker &amp; Online Diagram Software</title>
+    <meta name="application-name"
+          content="diagrams.net">
+    <meta name="apple-mobile-web-app-title"
+          content="diagrams.net">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type"
+          content="text/html; charset=UTF-8">
+    <meta name="Description"
+          content="diagrams.net is free online diagram software for making flowcharts, process diagrams, org charts, UML, ER and network diagrams">
+    <meta name="Keywords"
+          content="diagram, online, flow chart, flowchart maker, uml, erd">
+    <meta itemprop="name"
+          content="diagrams.net - free flowchart maker and diagrams online">
+    <meta itemprop="description"
+          content="diagrams.net is a free online diagramming application  and flowchart maker . You can use it to create UML, entity relationship,
+		org charts, BPMN and BPM, database schema and networks. Also possible are telecommunication network, workflow, flowcharts, maps overlays and GIS, electronic 
+		circuit and social network diagrams.">
+    <meta itemprop="image"
+          content="https://lh4.googleusercontent.com/-cLKEldMbT_E/Tx8qXDuw6eI/AAAAAAAAAAs/Ke0pnlk8Gpg/w500-h344-k/BPMN%2Bdiagram%2Brc2f.png">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="msapplication-config"
+          content="images/browserconfig.xml">
+    <meta name="mobile-web-app-capable"
+          content="yes">
+    <meta name="theme-color"
+          content="#d89000">
+    <script type="text/javascript"
+            defer="true"
+            src="js/extensions.min.js"></script>
+    <script type="text/javascript"
+            defer="true"
+            src="js/stencils.min.js"></script>
+    <script type="text/javascript"
+            defer="true"
+            src="js/shapes-14-6-5.min.js"></script>
+    <script type="text/javascript"
+            defer="true"
+            src="js/app.min.js"></script>
+    <script type="text/javascript">
+        /**
+         * URL Parameters and protocol description are here:
+         *
+         * https://desk.draw.io/support/solutions/articles/16000042546-what-url-parameters-are-supported
+         *
+         * Parameters for developers:
+         *
+         * - dev=1: For developers only
+         * - test=1: For developers only
+         * - export=URL for export: For developers only
+         * - ignoremime=1: For developers only (see DriveClient.js). Use Cmd-S to override mime.
+         * - createindex=1: For developers only (see etc/build/README)
+         * - filesupport=0: For developers only (see Editor.js in core)
+         * - savesidebar=1: For developers only (see Sidebar.js)
+         * - pages=1: For developers only (see Pages.js)
+         * - lic=email: For developers only (see LicenseServlet.java)
+         * --
+         * - networkshapes=1: For testing network shapes (temporary)
+         */
+        var urlParams = (function () {
+            var result = new Object();
+            var params = window.location.search.slice(1).split('&');
+
+            for (var i = 0; i < params.length; i++) {
+                var idx = params[i].indexOf('=');
+
+                if (idx > 0) {
+                    result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
+                }
+            }
+
+            return result;
+        })();
+
+        // Forces CDN caches by passing URL parameters via URL hash
+        if (window.location.hash != null && window.location.hash.substring(0, 2) == '#P') {
+            try {
+                urlParams = JSON.parse(decodeURIComponent(window.location.hash.substring(2)));
+
+                if (urlParams.hash != null) {
+                    window.location.hash = urlParams.hash;
+                }
+            }
+            catch (e) {
+                // ignore
+            }
+        }
+
+        // Global variable for desktop
+        var mxIsElectron = window && window.process && window.process.type;
+
+        // Redirects page if required
+        if (urlParams['dev'] != '1') {
+            (function () {
+                var proto = window.location.protocol;
+
+                if (!mxIsElectron) {
+                    var host = window.location.host;
+
+                    // Redirects apex, drive and rt to www
+                    if (host === 'draw.io' || host === 'rt.draw.io' || host === 'drive.draw.io') {
+                        host = 'www.draw.io';
+                    }
+
+                    var href = proto + '//' + host + window.location.href.substring(
+                        window.location.protocol.length +
+                        window.location.host.length + 2);
+
+                    // Redirects if href changes
+                    if (href != window.location.href) {
+                        window.location.href = href;
+                    }
+                }
+            })();
+        }
+
+        /**
+         * Adds meta tag to the page.
+         */
+        function mxmeta(name, content, httpEquiv) {
+            try {
+                var s = document.createElement('meta');
+
+                if (name != null) {
+                    s.setAttribute('name', name);
+                }
+
+                s.setAttribute('content', content);
+
+                if (httpEquiv != null) {
+                    s.setAttribute('http-equiv', httpEquiv);
+                }
+
+                var t = document.getElementsByTagName('meta')[0];
+                t.parentNode.insertBefore(s, t);
+            }
+            catch (e) {
+                // ignore
+            }
+        };
+
+        /**
+         * Synchronously adds scripts to the page.
+         */
+        function mxscript(src, onLoad, id, dataAppKey, noWrite) {
+            var defer = onLoad == null && !noWrite;
+
+            if ((urlParams['dev'] != '1' && typeof document.createElement('canvas').getContext === "function") ||
+                onLoad != null || noWrite) {
+                var s = document.createElement('script');
+                s.setAttribute('type', 'text/javascript');
+                s.setAttribute('defer', 'true');
+                s.setAttribute('src', src);
+
+                if (id != null) {
+                    s.setAttribute('id', id);
+                }
+
+                if (dataAppKey != null) {
+                    s.setAttribute('data-app-key', dataAppKey);
+                }
+
+                if (onLoad != null) {
+                    var r = false;
+
+                    s.onload = s.onreadystatechange = function () {
+                        if (!r && (!this.readyState || this.readyState == 'complete')) {
+                            r = true;
+                            onLoad();
+                        }
+                    };
+                }
+
+                var t = document.getElementsByTagName('script')[0];
+
+                if (t != null) {
+                    t.parentNode.insertBefore(s, t);
+                }
+            }
+            else {
+                document.write('<script src="' + src + '"' + ((id != null) ? ' id="' + id + '" ' : '') +
+                    ((dataAppKey != null) ? ' data-app-key="' + dataAppKey + '" ' : '') + '></scr' + 'ipt>');
+            }
+        };
+
+        /**
+         * Asynchronously adds scripts to the page.
+         */
+        function mxinclude(src) {
+            var g = document.createElement('script');
+            g.type = 'text/javascript';
+            g.async = true;
+            g.src = src;
+
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(g, s);
+        };
+
+        /**
+         * Adds meta tags with application name (depends on offline URL parameter)
+         */
+        (function () {
+            var name = 'diagrams.net';
+            mxmeta('apple-mobile-web-app-title', name);
+            mxmeta('application-name', name);
+
+            if (mxIsElectron) {
+                mxmeta(null, 'default-src \'self\' \'unsafe-inline\'; connect-src \'self\' https://*.draw.io https://fonts.googleapis.com https://fonts.gstatic.com; img-src * data:; media-src *; font-src *; style-src-elem \'self\' \'unsafe-inline\' https://fonts.googleapis.com', 'Content-Security-Policy');
+            }
+        })();
+
+        // Checks for local storage
+        var isLocalStorage = false;
+
+        try {
+            isLocalStorage = urlParams['local'] != '1' && typeof (localStorage) != 'undefined';
+        }
+        catch (e) {
+            // ignored
+        }
+
+        var mxScriptsLoaded = false, mxWinLoaded = false;
+
+        function checkAllLoaded() {
+            if (mxScriptsLoaded && mxWinLoaded) {
+                App.main();
+            }
+        };
+
+        var t0 = new Date();
+
+        // Changes paths for local development environment
+        if (urlParams['dev'] == '1') {
+            // Used to request grapheditor/mxgraph sources in dev mode
+            var mxDevUrl = document.location.protocol + '//devhost.jgraph.com/drawio/src/main';
+
+            // Used to request draw.io sources in dev mode
+            var drawDevUrl = document.location.protocol + '//devhost.jgraph.com/drawio/src/main/webapp/';
+            var geBasePath = drawDevUrl + '/js/grapheditor';
+            var mxBasePath = mxDevUrl + '/mxgraph';
+
+            if (document.location.protocol == 'file:') {
+                geBasePath = './js/grapheditor';
+                mxBasePath = './mxgraph';
+                drawDevUrl = './';
+
+                // Forces includes for dev environment in node.js
+                mxForceIncludes = true;
+            }
+
+            mxForceIncludes = false;
+
+            mxscript(drawDevUrl + 'js/PreConfig.js');
+            mxscript(drawDevUrl + 'js/diagramly/Init.js');
+            mxscript(geBasePath + '/Init.js');
+            mxscript(mxBasePath + '/mxClient.js');
+
+            // Adds all JS code that depends on mxClient. This indirection via Devel.js is
+            // required in some browsers to make sure mxClient.js (and the files that it
+            // loads asynchronously) are available when the code loaded in Devel.js runs.
+            mxscript(drawDevUrl + 'js/diagramly/Devel.js');
+
+            // Electron
+            if (mxIsElectron) {
+                mxscript('js/diagramly/DesktopLibrary.js');
+                mxscript('js/diagramly/ElectronApp.js');
+            }
+
+            mxscript(drawDevUrl + 'js/PostConfig.js');
+        }
+        else {
+            (function () {
+                var hostName = window.location.hostname;
+
+                // Supported domains are *.draw.io and the packaged version in Quip
+                var supportedDomain = (hostName.substring(hostName.length - 8, hostName.length) === '.draw.io') ||
+                    (hostName.substring(hostName.length - 13, hostName.length) === '.diagrams.net');
+
+                function loadAppJS() {
+                    mxscript('js/app.min.js', function () {
+                        mxScriptsLoaded = true;
+                        checkAllLoaded();
+
+                        // Electron
+                        if (mxIsElectron) {
+                            mxscript('js/diagramly/DesktopLibrary.js', function () {
+                                mxscript('js/diagramly/ElectronApp.js', function () {
+                                    mxscript('js/extensions.min.js', function () {
+                                        mxscript('js/stencils.min.js', function () {
+                                            mxscript('js/shapes-14-6-5.min.js', function () {
+                                                mxscript('js/PostConfig.js');
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        }
+                        else if (!supportedDomain) {
+                            mxscript('js/PostConfig.js');
+                        }
+                    });
+                };
+
+                if (!supportedDomain || mxIsElectron) {
+                    mxscript('js/PreConfig.js', loadAppJS);
+                }
+                else {
+                    loadAppJS();
+                }
+            })();
+        }
+
+        // Adds basic error handling
+        window.onerror = function () {
+            var status = document.getElementById('geStatus');
+
+            if (status != null) {
+                status.innerHTML = 'Page could not be loaded. Please try refreshing.';
+            }
+        };
+    </script>
+    <link rel="chrome-webstore-item"
+          href="https://chrome.google.com/webstore/detail/plgmlhohecdddhbmmkncjdmlhcmaachm">
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="images/apple-touch-icon.png">
+    <link rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="images/favicon-32x32.png">
+    <link rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="images/favicon-16x16.png">
+    <link rel="mask-icon"
+          href="images/safari-pinned-tab.svg"
+          color="#d89000">
+    <link rel="stylesheet"
+          type="text/css"
+          href="styles/grapheditor.css">
+    <link rel="preconnect"
+          href="https://storage.googleapis.com">
+    <link rel="canonical"
+          href="https://app.diagrams.net">
+    <link rel="manifest"
+          href="images/manifest.json">
+    <link rel="shortcut icon"
+          href="favicon.ico">
+    <style type="text/css">
+        body {
+            overflow: hidden;
+        }
+
+        div.picker {
+            z-index: 10007;
+        }
+
+        .geSidebarContainer .geTitle input {
+            font-size: 8pt;
+            color: #606060;
+        }
+
+        .geBlock {
+            z-index: -3;
+            margin: 100px;
+            margin-top: 40px;
+            margin-bottom: 30px;
+            padding: 20px;
+            text-align: center;
+            min-width: 50%;
+        }
+
+        .geBlock h1,
+        .geBlock h2 {
+            margin-top: 0px;
+            padding-top: 0px;
+        }
+
+        .geEditor *:not(.geScrollable)::-webkit-scrollbar {
+            width: 14px;
+            height: 14px;
+        }
+
+        .geEditor ::-webkit-scrollbar-track {
+            background-clip: padding-box;
+            border: solid transparent;
+            border-width: 1px;
+        }
+
+        .geEditor ::-webkit-scrollbar-corner {
+            background-color: transparent;
+        }
+
+        .geEditor ::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, .1);
+            background-clip: padding-box;
+            border: solid transparent;
+            border-radius: 10px;
+        }
+
+        .geEditor ::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(0, 0, 0, .4);
+        }
+
+        .geTemplate {
+            border: 1px solid transparent;
+            display: inline-block;
+            _display: inline;
+            vertical-align: top;
+            border-radius: 3px;
+            overflow: hidden;
+            font-size: 14pt;
+            cursor: pointer;
+            margin: 5px;
+        }
+    </style>
+    <!-- Workaround for binary XHR in IE 9/10, see App.loadUrl -->
+    <!--[if (IE 9)|(IE 10)]><!-->
+    <script type="text/vbscript">
+			Function mxUtilsBinaryToArray(Binary)
+				Dim i
+				ReDim byteArray(LenB(Binary))
+				For i = 1 To LenB(Binary)
+					byteArray(i-1) = AscB(MidB(Binary, i, 1))
+				Next
+				mxUtilsBinaryToArray = byteArray
+			End Function
+		</script>
+    <!--<![endif]-->
+    <style type="text/css"></style>
+    <link rel="stylesheet"
+          href="mxgraph/css/common.css"
+          charset="UTF-8"
+          type="text/css">
+    <script type="text/javascript"
+            src="https://viewer.diagrams.net/math/MathJax.js?config=TeX-MML-AM_SVG-full,Safe"></script>
+    <style type="text/css">
+        div.MathJax_SVG_Display {
+            position: static;
+        }
+
+        span.MathJax_SVG {
+            position: static !important;
+        }
+    </style>
+    <link rel="stylesheet"
+          type="text/css"
+          charset="UTF-8"
+          href="https://fonts.googleapis.com/css?family=Open+Sans">
+    <style type="text/css">
+        .MathJax_Hover_Frame {
+            border-radius: .25em;
+            -webkit-border-radius: .25em;
+            -moz-border-radius: .25em;
+            -khtml-border-radius: .25em;
+            box-shadow: 0px 0px 15px #83A;
+            -webkit-box-shadow: 0px 0px 15px #83A;
+            -moz-box-shadow: 0px 0px 15px #83A;
+            -khtml-box-shadow: 0px 0px 15px #83A;
+            border: 1px solid #A6D ! important;
+            display: inline-block;
+            position: absolute
+        }
+
+        .MathJax_Menu_Button .MathJax_Hover_Arrow {
+            position: absolute;
+            cursor: pointer;
+            display: inline-block;
+            border: 2px solid #AAA;
+            border-radius: 4px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -khtml-border-radius: 4px;
+            font-family: 'Courier New', Courier;
+            font-size: 9px;
+            color: #F0F0F0
+        }
+
+        .MathJax_Menu_Button .MathJax_Hover_Arrow span {
+            display: block;
+            background-color: #AAA;
+            border: 1px solid;
+            border-radius: 3px;
+            line-height: 0;
+            padding: 4px
+        }
+
+        .MathJax_Hover_Arrow:hover {
+            color: white !important;
+            border: 2px solid #CCC !important
+        }
+
+        .MathJax_Hover_Arrow:hover span {
+            background-color: #CCC !important
+        }
+    </style>
+    <style type="text/css">
+        #MathJax_About {
+            position: fixed;
+            left: 50%;
+            width: auto;
+            text-align: center;
+            border: 3px outset;
+            padding: 1em 2em;
+            background-color: #DDDDDD;
+            color: black;
+            cursor: default;
+            font-family: message-box;
+            font-size: 120%;
+            font-style: normal;
+            text-indent: 0;
+            text-transform: none;
+            line-height: normal;
+            letter-spacing: normal;
+            word-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            float: none;
+            z-index: 201;
+            border-radius: 15px;
+            -webkit-border-radius: 15px;
+            -moz-border-radius: 15px;
+            -khtml-border-radius: 15px;
+            box-shadow: 0px 10px 20px #808080;
+            -webkit-box-shadow: 0px 10px 20px #808080;
+            -moz-box-shadow: 0px 10px 20px #808080;
+            -khtml-box-shadow: 0px 10px 20px #808080;
+            filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')
+        }
+
+        #MathJax_About.MathJax_MousePost {
+            outline: none
+        }
+
+        .MathJax_Menu {
+            position: absolute;
+            background-color: white;
+            color: black;
+            width: auto;
+            padding: 2px;
+            border: 1px solid #CCCCCC;
+            margin: 0;
+            cursor: default;
+            font: menu;
+            text-align: left;
+            text-indent: 0;
+            text-transform: none;
+            line-height: normal;
+            letter-spacing: normal;
+            word-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            float: none;
+            z-index: 201;
+            box-shadow: 0px 10px 20px #808080;
+            -webkit-box-shadow: 0px 10px 20px #808080;
+            -moz-box-shadow: 0px 10px 20px #808080;
+            -khtml-box-shadow: 0px 10px 20px #808080;
+            filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')
+        }
+
+        .MathJax_MenuItem {
+            padding: 2px 2em;
+            background: transparent
+        }
+
+        .MathJax_MenuArrow {
+            position: absolute;
+            right: .5em;
+            padding-top: .25em;
+            color: #666666;
+            font-size: .75em
+        }
+
+        .MathJax_MenuActive .MathJax_MenuArrow {
+            color: white
+        }
+
+        .MathJax_MenuArrow.RTL {
+            left: .5em;
+            right: auto
+        }
+
+        .MathJax_MenuCheck {
+            position: absolute;
+            left: .7em
+        }
+
+        .MathJax_MenuCheck.RTL {
+            right: .7em;
+            left: auto
+        }
+
+        .MathJax_MenuRadioCheck {
+            position: absolute;
+            left: 1em
+        }
+
+        .MathJax_MenuRadioCheck.RTL {
+            right: 1em;
+            left: auto
+        }
+
+        .MathJax_MenuLabel {
+            padding: 2px 2em 4px 1.33em;
+            font-style: italic
+        }
+
+        .MathJax_MenuRule {
+            border-top: 1px solid #CCCCCC;
+            margin: 4px 1px 0px
+        }
+
+        .MathJax_MenuDisabled {
+            color: GrayText
+        }
+
+        .MathJax_MenuActive {
+            background-color: Highlight;
+            color: HighlightText
+        }
+
+        .MathJax_MenuDisabled:focus,
+        .MathJax_MenuLabel:focus {
+            background-color: #E8E8E8
+        }
+
+        .MathJax_ContextMenu:focus {
+            outline: none
+        }
+
+        .MathJax_ContextMenu .MathJax_MenuItem:focus {
+            outline: none
+        }
+
+        #MathJax_AboutClose {
+            top: .2em;
+            right: .2em
+        }
+
+        .MathJax_Menu .MathJax_MenuClose {
+            top: -10px;
+            left: -10px
+        }
+
+        .MathJax_MenuClose {
+            position: absolute;
+            cursor: pointer;
+            display: inline-block;
+            border: 2px solid #AAA;
+            border-radius: 18px;
+            -webkit-border-radius: 18px;
+            -moz-border-radius: 18px;
+            -khtml-border-radius: 18px;
+            font-family: 'Courier New', Courier;
+            font-size: 24px;
+            color: #F0F0F0
+        }
+
+        .MathJax_MenuClose span {
+            display: block;
+            background-color: #AAA;
+            border: 1.5px solid;
+            border-radius: 18px;
+            -webkit-border-radius: 18px;
+            -moz-border-radius: 18px;
+            -khtml-border-radius: 18px;
+            line-height: 0;
+            padding: 8px 0 6px
+        }
+
+        .MathJax_MenuClose:hover {
+            color: white !important;
+            border: 2px solid #CCC !important
+        }
+
+        .MathJax_MenuClose:hover span {
+            background-color: #CCC !important
+        }
+
+        .MathJax_MenuClose:hover:focus {
+            outline: none
+        }
+    </style>
+    <style type="text/css">
+        .MathJax_Preview .MJXf-math {
+            color: inherit !important
+        }
+    </style>
+    <style type="text/css">
+        .MJX_Assistive_MathML {
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            clip: rect(1px, 1px, 1px, 1px);
+            padding: 1px 0 0 0 !important;
+            border: 0 !important;
+            height: 1px !important;
+            width: 1px !important;
+            overflow: hidden !important;
+            display: block !important;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        .MJX_Assistive_MathML.MJX_Assistive_MathML_Block {
+            width: 100% !important
+        }
+    </style>
+    <style type="text/css">
+        #MathJax_Zoom {
+            position: absolute;
+            background-color: #F0F0F0;
+            overflow: auto;
+            display: block;
+            z-index: 301;
+            padding: .5em;
+            border: 1px solid black;
+            margin: 0;
+            font-weight: normal;
+            font-style: normal;
+            text-align: left;
+            text-indent: 0;
+            text-transform: none;
+            line-height: normal;
+            letter-spacing: normal;
+            word-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            float: none;
+            -webkit-box-sizing: content-box;
+            -moz-box-sizing: content-box;
+            box-sizing: content-box;
+            box-shadow: 5px 5px 15px #AAAAAA;
+            -webkit-box-shadow: 5px 5px 15px #AAAAAA;
+            -moz-box-shadow: 5px 5px 15px #AAAAAA;
+            -khtml-box-shadow: 5px 5px 15px #AAAAAA;
+            filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')
+        }
+
+        #MathJax_ZoomOverlay {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 300;
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            background-color: white;
+            opacity: 0;
+            filter: alpha(opacity=0)
+        }
+
+        #MathJax_ZoomFrame {
+            position: relative;
+            display: inline-block;
+            height: 0;
+            width: 0
+        }
+
+        #MathJax_ZoomEventTrap {
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 302;
+            display: inline-block;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            background-color: white;
+            opacity: 0;
+            filter: alpha(opacity=0)
+        }
+    </style>
+    <style type="text/css">
+        .MathJax_Preview {
+            color: #888;
+            display: contents
+        }
+
+        #MathJax_Message {
+            position: fixed;
+            left: 1em;
+            bottom: 1.5em;
+            background-color: #E6E6E6;
+            border: 1px solid #959595;
+            margin: 0px;
+            padding: 2px 8px;
+            z-index: 102;
+            color: black;
+            font-size: 80%;
+            width: auto;
+            white-space: nowrap
+        }
+
+        #MathJax_MSIE_Frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0px;
+            z-index: 101;
+            border: 0px;
+            margin: 0px;
+            padding: 0px
+        }
+
+        .MathJax_Error {
+            color: #CC0000;
+            font-style: italic
+        }
+    </style>
+    <style type="text/css">
+        .MJXp-script {
+            font-size: .8em
+        }
+
+        .MJXp-right {
+            -webkit-transform-origin: right;
+            -moz-transform-origin: right;
+            -ms-transform-origin: right;
+            -o-transform-origin: right;
+            transform-origin: right
+        }
+
+        .MJXp-bold {
+            font-weight: bold
+        }
+
+        .MJXp-italic {
+            font-style: italic
+        }
+
+        .MJXp-scr {
+            font-family: MathJax_Script, 'Times New Roman', Times, STIXGeneral, serif
+        }
+
+        .MJXp-frak {
+            font-family: MathJax_Fraktur, 'Times New Roman', Times, STIXGeneral, serif
+        }
+
+        .MJXp-sf {
+            font-family: MathJax_SansSerif, 'Times New Roman', Times, STIXGeneral, serif
+        }
+
+        .MJXp-cal {
+            font-family: MathJax_Caligraphic, 'Times New Roman', Times, STIXGeneral, serif
+        }
+
+        .MJXp-mono {
+            font-family: MathJax_Typewriter, 'Times New Roman', Times, STIXGeneral, serif
+        }
+
+        .MJXp-largeop {
+            font-size: 150%
+        }
+
+        .MJXp-largeop.MJXp-int {
+            vertical-align: -.2em
+        }
+
+        .MJXp-math {
+            display: inline-block;
+            line-height: 1.2;
+            text-indent: 0;
+            font-family: 'Times New Roman', Times, STIXGeneral, serif;
+            white-space: nowrap;
+            border-collapse: collapse
+        }
+
+        .MJXp-display {
+            display: block;
+            text-align: center;
+            margin: 1em 0
+        }
+
+        .MJXp-math span {
+            display: inline-block
+        }
+
+        .MJXp-box {
+            display: block !important;
+            text-align: center
+        }
+
+        .MJXp-box:after {
+            content: " "
+        }
+
+        .MJXp-rule {
+            display: block !important;
+            margin-top: .1em
+        }
+
+        .MJXp-char {
+            display: block !important
+        }
+
+        .MJXp-mo {
+            margin: 0 .15em
+        }
+
+        .MJXp-mfrac {
+            margin: 0 .125em;
+            vertical-align: .25em
+        }
+
+        .MJXp-denom {
+            display: inline-table !important;
+            width: 100%
+        }
+
+        .MJXp-denom>* {
+            display: table-row !important
+        }
+
+        .MJXp-surd {
+            vertical-align: top
+        }
+
+        .MJXp-surd>* {
+            display: block !important
+        }
+
+        .MJXp-script-box>* {
+            display: table !important;
+            height: 50%
+        }
+
+        .MJXp-script-box>*>* {
+            display: table-cell !important;
+            vertical-align: top
+        }
+
+        .MJXp-script-box>*:last-child>* {
+            vertical-align: bottom
+        }
+
+        .MJXp-script-box>*>*>* {
+            display: block !important
+        }
+
+        .MJXp-mphantom {
+            visibility: hidden
+        }
+
+        .MJXp-munderover,
+        .MJXp-munder {
+            display: inline-table !important
+        }
+
+        .MJXp-over {
+            display: inline-block !important;
+            text-align: center
+        }
+
+        .MJXp-over>* {
+            display: block !important
+        }
+
+        .MJXp-munderover>*,
+        .MJXp-munder>* {
+            display: table-row !important
+        }
+
+        .MJXp-mtable {
+            vertical-align: .25em;
+            margin: 0 .125em
+        }
+
+        .MJXp-mtable>* {
+            display: inline-table !important;
+            vertical-align: middle
+        }
+
+        .MJXp-mtr {
+            display: table-row !important
+        }
+
+        .MJXp-mtd {
+            display: table-cell !important;
+            text-align: center;
+            padding: .5em 0 0 .5em
+        }
+
+        .MJXp-mtr>.MJXp-mtd:first-child {
+            padding-left: 0
+        }
+
+        .MJXp-mtr:first-child>.MJXp-mtd {
+            padding-top: 0
+        }
+
+        .MJXp-mlabeledtr {
+            display: table-row !important
+        }
+
+        .MJXp-mlabeledtr>.MJXp-mtd:first-child {
+            padding-left: 0
+        }
+
+        .MJXp-mlabeledtr:first-child>.MJXp-mtd {
+            padding-top: 0
+        }
+
+        .MJXp-merror {
+            background-color: #FFFF88;
+            color: #CC0000;
+            border: 1px solid #CC0000;
+            padding: 1px 3px;
+            font-style: normal;
+            font-size: 90%
+        }
+
+        .MJXp-scale0 {
+            -webkit-transform: scaleX(.0);
+            -moz-transform: scaleX(.0);
+            -ms-transform: scaleX(.0);
+            -o-transform: scaleX(.0);
+            transform: scaleX(.0)
+        }
+
+        .MJXp-scale1 {
+            -webkit-transform: scaleX(.1);
+            -moz-transform: scaleX(.1);
+            -ms-transform: scaleX(.1);
+            -o-transform: scaleX(.1);
+            transform: scaleX(.1)
+        }
+
+        .MJXp-scale2 {
+            -webkit-transform: scaleX(.2);
+            -moz-transform: scaleX(.2);
+            -ms-transform: scaleX(.2);
+            -o-transform: scaleX(.2);
+            transform: scaleX(.2)
+        }
+
+        .MJXp-scale3 {
+            -webkit-transform: scaleX(.3);
+            -moz-transform: scaleX(.3);
+            -ms-transform: scaleX(.3);
+            -o-transform: scaleX(.3);
+            transform: scaleX(.3)
+        }
+
+        .MJXp-scale4 {
+            -webkit-transform: scaleX(.4);
+            -moz-transform: scaleX(.4);
+            -ms-transform: scaleX(.4);
+            -o-transform: scaleX(.4);
+            transform: scaleX(.4)
+        }
+
+        .MJXp-scale5 {
+            -webkit-transform: scaleX(.5);
+            -moz-transform: scaleX(.5);
+            -ms-transform: scaleX(.5);
+            -o-transform: scaleX(.5);
+            transform: scaleX(.5)
+        }
+
+        .MJXp-scale6 {
+            -webkit-transform: scaleX(.6);
+            -moz-transform: scaleX(.6);
+            -ms-transform: scaleX(.6);
+            -o-transform: scaleX(.6);
+            transform: scaleX(.6)
+        }
+
+        .MJXp-scale7 {
+            -webkit-transform: scaleX(.7);
+            -moz-transform: scaleX(.7);
+            -ms-transform: scaleX(.7);
+            -o-transform: scaleX(.7);
+            transform: scaleX(.7)
+        }
+
+        .MJXp-scale8 {
+            -webkit-transform: scaleX(.8);
+            -moz-transform: scaleX(.8);
+            -ms-transform: scaleX(.8);
+            -o-transform: scaleX(.8);
+            transform: scaleX(.8)
+        }
+
+        .MJXp-scale9 {
+            -webkit-transform: scaleX(.9);
+            -moz-transform: scaleX(.9);
+            -ms-transform: scaleX(.9);
+            -o-transform: scaleX(.9);
+            transform: scaleX(.9)
+        }
+
+        .MathJax_PHTML .noError {
+            vertical-align: ;
+            font-size: 90%;
+            text-align: left;
+            color: black;
+            padding: 1px 3px;
+            border: 1px solid
+        }
+    </style>
+    <style type="text/css">
+        .MathJax_SVG_Display {
+            text-align: center;
+            margin: 1em 0em;
+            position: relative;
+            display: block !important;
+            text-indent: 0;
+            max-width: none;
+            max-height: none;
+            min-width: 0;
+            min-height: 0;
+            width: 100%
+        }
+
+        .MathJax_SVG .MJX-monospace {
+            font-family: monospace
+        }
+
+        .MathJax_SVG .MJX-sans-serif {
+            font-family: sans-serif
+        }
+
+        #MathJax_SVG_Tooltip {
+            background-color: InfoBackground;
+            color: InfoText;
+            border: 1px solid black;
+            box-shadow: 2px 2px 5px #AAAAAA;
+            -webkit-box-shadow: 2px 2px 5px #AAAAAA;
+            -moz-box-shadow: 2px 2px 5px #AAAAAA;
+            -khtml-box-shadow: 2px 2px 5px #AAAAAA;
+            padding: 3px 4px;
+            z-index: 401;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: auto;
+            height: auto;
+            display: none
+        }
+
+        .MathJax_SVG {
+            display: inline;
+            font-style: normal;
+            font-weight: normal;
+            line-height: normal;
+            font-size: 100%;
+            font-size-adjust: none;
+            text-indent: 0;
+            text-align: left;
+            text-transform: none;
+            letter-spacing: normal;
+            word-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            float: none;
+            direction: ltr;
+            max-width: none;
+            max-height: none;
+            min-width: 0;
+            min-height: 0;
+            border: 0;
+            padding: 0;
+            margin: 0
+        }
+
+        .MathJax_SVG * {
+            transition: none;
+            -webkit-transition: none;
+            -moz-transition: none;
+            -ms-transition: none;
+            -o-transition: none
+        }
+
+        .MathJax_SVG>div {
+            display: inline-block
+        }
+
+        .mjx-svg-href {
+            fill: blue;
+            stroke: blue
+        }
+
+        .MathJax_SVG_Processing {
+            visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+            display: block !important
+        }
+
+        .MathJax_SVG_Processed {
+            display: none !important
+        }
+
+        .MathJax_SVG_test {
+            font-style: normal;
+            font-weight: normal;
+            font-size: 100%;
+            font-size-adjust: none;
+            text-indent: 0;
+            text-transform: none;
+            letter-spacing: normal;
+            word-spacing: normal;
+            overflow: hidden;
+            height: 1px
+        }
+
+        .MathJax_SVG_test.mjx-test-display {
+            display: table !important
+        }
+
+        .MathJax_SVG_test.mjx-test-inline {
+            display: inline !important;
+            margin-right: -1px
+        }
+
+        .MathJax_SVG_test.mjx-test-default {
+            display: block !important;
+            clear: both
+        }
+
+        .MathJax_SVG_ex_box {
+            display: inline-block !important;
+            position: absolute;
+            overflow: hidden;
+            min-height: 0;
+            max-height: none;
+            padding: 0;
+            border: 0;
+            margin: 0;
+            width: 1px;
+            height: 60ex
+        }
+
+        .mjx-test-inline .MathJax_SVG_left_box {
+            display: inline-block;
+            width: 0;
+            float: left
+        }
+
+        .mjx-test-inline .MathJax_SVG_right_box {
+            display: inline-block;
+            width: 0;
+            float: right
+        }
+
+        .mjx-test-display .MathJax_SVG_right_box {
+            display: table-cell !important;
+            width: 10000em !important;
+            min-width: 0;
+            max-width: none;
+            padding: 0;
+            border: 0;
+            margin: 0
+        }
+
+        .MathJax_SVG .noError {
+            vertical-align: ;
+            font-size: 90%;
+            text-align: left;
+            color: black;
+            padding: 1px 3px;
+            border: 1px solid
+        }
+    </style>
+</head>
+
+<body class="geEditor"
+      style="background-color: rgb(255, 255, 255);">
+    <div
+         style="visibility: hidden; overflow: hidden; position: absolute; top: 0px; height: 1px; width: auto; padding: 0px; border: 0px; margin: 0px; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal;">
+        <div id="MathJax_SVG_Hidden"></div><svg>
+            <defs id="MathJax_SVG_glyphs"></defs>
+        </svg>
+    </div>
+    <div id="MathJax_Message"
+         style="display: none;"></div>
+
+    <script type="text/javascript">
+        /**
+         * Main
+         */
+        if (navigator.userAgent != null && navigator.userAgent.toLowerCase().
+            indexOf(' electron/') >= 0 && typeof process !== 'undefined' && process.versions.electron < 5) {
+            // Redirects old Electron app to latest version
+            var div = document.getElementById('geInfo');
+
+            if (div != null) {
+                div.innerHTML = '<center><h2>You are using an out of date version of this app.<br>Please download the latest version ' +
+                    '<a href="https://github.com/jgraph/drawio-desktop/releases/latest" target="_blank">here</a>.</h2></center>';
+            }
+        }
+        else {
+            if (urlParams['dev'] != '1' && typeof document.createElement('canvas').getContext === "function") {
+                window.addEventListener('load', function () {
+                    mxWinLoaded = true;
+                    checkAllLoaded();
+                });
+            }
+            else {
+                App.main();
+            }
+        }
+    </script>
+
+
+    <div class="geDiagramContainer"
+         tabindex="0"
+         style="inset: 0px; border: none; touch-action: none; overflow: auto; cursor: default;"><svg
+             style="left: 0px; top: 0px; width: 100%; height: 100%; display: block; min-width: 1248px; min-height: 1286px; position: absolute; background-image: none; background-color: rgb(255, 255, 255);">
+            <defs>
+                <filter id="dropShadow">
+                    <feGaussianBlur in="SourceAlpha"
+                                    stdDeviation="1.7"
+                                    result="blur"></feGaussianBlur>
+                    <feOffset in="blur"
+                              dx="3"
+                              dy="3"
+                              result="offsetBlur"></feOffset>
+                    <feFlood flood-color="#3D4574"
+                             flood-opacity="0.4"
+                             result="offsetColor"></feFlood>
+                    <feComposite in="offsetColor"
+                                 in2="offsetBlur"
+                                 operator="in"
+                                 result="offsetBlur"></feComposite>
+                    <feBlend in="SourceGraphic"
+                             in2="offsetBlur"></feBlend>
+                </filter>
+            </defs>
+            <g transformOrigin="0 0"
+               transform="scale(1.2,1.2)translate(389,40)">
+                <g></g>
+                <g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 405 849 L 405 869 L 290 869 L 290 875.63"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 405 849 L 405 869 L 290 869 L 290 875.63"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 290 880.88 L 287.67 873.88 L 290 875.63 L 292.33 873.88 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="160"
+                              y="362"
+                              width="490"
+                              height="487"
+                              fill="#f0f7ff"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe flex-start; justify-content: unsafe center; width: 488px; height: 1px; padding-top: 369px; margin-left: 161px;">
+                                    <div data-drawio-colors="color: #212C94; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(33, 44, 148); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Увольнение/Оформление</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 405 240 L 405 265.63"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 405 240 L 405 265.63"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 405 270.88 L 402.67 263.88 L 405 265.63 L 407.33 263.88 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="160"
+                              y="30"
+                              width="490"
+                              height="210"
+                              fill="#f0f7ff"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe flex-start; justify-content: unsafe center; width: 488px; height: 1px; padding-top: 37px; margin-left: 161px;">
+                                    <div data-drawio-colors="color: #212C94; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(33, 44, 148); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Базовая легализация</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 303.25 98 L 336.88 98"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 303.25 98 L 336.88 98"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 342.13 98 L 335.13 100.33 L 336.88 98 L 335.13 95.67 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="183.25"
+                              y="68"
+                              width="120"
+                              height="60"
+                              rx="9"
+                              ry="9"
+                              fill="rgb(255, 255, 255)"
+                              stroke="#828282"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 98px; margin-left: 184px;">
+                                    <div data-drawio-colors="color: rgb(0, 0, 0); "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            PESEL</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 303.25 184 L 336.88 184"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 303.25 184 L 336.88 184"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 342.13 184 L 335.13 186.33 L 336.88 184 L 335.13 181.67 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="183.25"
+                              y="154"
+                              width="120"
+                              height="60"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 184px; margin-left: 184px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Договор аренды жилья</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 463.25 98 L 500.38 98"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 463.25 98 L 500.38 98"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 505.63 98 L 498.63 100.33 L 500.38 98 L 498.63 95.67 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="343.25"
+                              y="68"
+                              width="120"
+                              height="60"
+                              rx="9"
+                              ry="9"
+                              fill="rgb(255, 255, 255)"
+                              stroke="#828282"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 98px; margin-left: 344px;">
+                                    <div data-drawio-colors="color: rgb(0, 0, 0); "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Личный счёт в банке</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="506.75"
+                              y="68"
+                              width="120"
+                              height="60"
+                              rx="9"
+                              ry="9"
+                              fill="rgb(255, 255, 255)"
+                              stroke="#828282"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 98px; margin-left: 508px;">
+                                    <div data-drawio-colors="color: rgb(0, 0, 0); "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Profil Zaufany</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 405 332 L 405 355.63"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 405 332 L 405 355.63"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 405 360.88 L 402.67 353.88 L 405 355.63 L 407.33 353.88 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="320"
+                              y="272"
+                              width="170"
+                              height="60"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 168px; height: 1px; padding-top: 302px; margin-left: 321px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Открытие ИП</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="343.25"
+                              y="154"
+                              width="120"
+                              height="60"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 184px; margin-left: 344px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Meldunek<br>Czasowy</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 290 469 L 290 504.63"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 290 469 L 290 504.63"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 290 509.88 L 287.67 502.88 L 290 504.63 L 292.33 502.88 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="210"
+                              y="401"
+                              width="160"
+                              height="68"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 158px; height: 1px; padding-top: 435px; margin-left: 211px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Получение номеров<br>NIP и REGON</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 290 579 L 290 615.63"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 290 579 L 290 615.63"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 290 620.88 L 287.67 613.88 L 290 615.63 L 292.33 613.88 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="210"
+                              y="511"
+                              width="160"
+                              height="68"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 158px; height: 1px; padding-top: 545px; margin-left: 211px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Фирменный счёт<br>в банке</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 525 469 L 525 502.63"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 525 469 L 525 502.63"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 525 507.88 L 522.67 500.88 L 525 502.63 L 527.33 500.88 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="440"
+                              y="401"
+                              width="170"
+                              height="68"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 168px; height: 1px; padding-top: 435px; margin-left: 441px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Согласование рейта<br>и даты увольнения</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 525 579 L 525 615.63"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 525 579 L 525 615.63"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 525 620.88 L 522.67 613.88 L 525 615.63 L 527.33 613.88 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="440"
+                              y="509"
+                              width="170"
+                              height="70"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 168px; height: 1px; padding-top: 544px; margin-left: 441px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Заявление на<br>увольнение</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 370 918.5 Q 370 918.5 431.75 918.5"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 370 918.5 Q 370 918.5 431.75 918.5"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 437 918.5 L 430 920.83 L 431.75 918.5 L 430 916.17 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="210"
+                              y="882"
+                              width="160"
+                              height="73"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 158px; height: 1px; padding-top: 919px; margin-left: 211px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Отправление email на подписание B2B контракта</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="210"
+                              y="746"
+                              width="160"
+                              height="73"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 158px; height: 1px; padding-top: 783px; margin-left: 211px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Создание электронного обходного листа</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="506.75"
+                              y="154"
+                              width="120"
+                              height="60"
+                              rx="9"
+                              ry="9"
+                              fill="rgb(255, 255, 255)"
+                              stroke="#828282"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 184px; margin-left: 508px;">
+                                    <div data-drawio-colors="color: rgb(0, 0, 0); "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Местный номер телефона</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 440 579 Q 440 579 372.46 740.13"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 440 579 Q 440 579 372.46 740.13"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 370.43 744.97 L 370.99 737.61 L 372.46 740.13 L 375.29 739.42 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="210"
+                              y="622"
+                              width="160"
+                              height="78"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 158px; height: 1px; padding-top: 661px; margin-left: 211px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Отправление номера<br>&nbsp;счёта в ОК Poland Office</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="438.12"
+                              y="746"
+                              width="173.75"
+                              height="73"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 172px; height: 1px; padding-top: 783px; margin-left: 439px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Отправление подписанных документов в Belarus Office</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 525 700 L 525 739.63"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 525 700 L 525 739.63"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"></path>
+                        <path d="M 525 744.88 L 522.66 737.88 L 525 739.63 L 527.33 737.88 Z"
+                              fill="#424242"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="440"
+                              y="622"
+                              width="170"
+                              height="78"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 168px; height: 1px; padding-top: 661px; margin-left: 441px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Получение приказа об увольнении</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="183.25"
+                              y="68"
+                              width="120"
+                              height="60"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 98px; margin-left: 184px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            PESEL</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="343.25"
+                              y="68"
+                              width="120"
+                              height="60"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 98px; margin-left: 344px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Личный счёт в банке</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="506.75"
+                              y="68"
+                              width="120"
+                              height="60"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 98px; margin-left: 508px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Profil Zaufany</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="506.75"
+                              y="154"
+                              width="120"
+                              height="60"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 118px; height: 1px; padding-top: 184px; margin-left: 508px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Местный номер телефона</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="438.12"
+                              y="882"
+                              width="171.88"
+                              height="73"
+                              fill="#3f53d9"
+                              stroke="#3f53d9"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g style="">
+                        <g>
+                            <foreignObject pointer-events="none"
+                                           width="100%"
+                                           height="100%"
+                                           style="overflow: visible; text-align: left;">
+                                <div
+                                     style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 170px; height: 1px; padding-top: 919px; margin-left: 439px;">
+                                    <div data-drawio-colors="color: #FFFFFF; "
+                                         style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                                        <div
+                                             style="display: inline-block; font-size: 13px; font-family: &quot;Open Sans&quot;; color: rgb(255, 255, 255); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
+                                            Отправление подписанных документов в<br>Poland Office</div>
+                                    </div>
+                                </div>
+                            </foreignObject>
+                        </g>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <path d="M 343.25 154 Q 343.25 154 308.59 131.47"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 343.25 154 Q 343.25 154 308.59 131.47"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              stroke-dasharray="1 4"
+                              pointer-events="stroke"></path>
+                        <path d="M 304.19 128.61 L 311.33 130.47 L 308.59 131.47 L 308.78 134.38 Z"
+                              fill="none"
+                              stroke="white"
+                              stroke-miterlimit="10"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></path>
+                        <path d="M 304.19 128.61 L 311.33 130.47 L 308.59 131.47 L 308.78 134.38 Z"
+                              fill="none"
+                              stroke="#424242"
+                              stroke-miterlimit="10"
+                              pointer-events="all"></path>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="160"
+                              y="-40"
+                              width="490"
+                              height="60"
+                              fill="none"
+                              stroke="white"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></rect>
+                        <rect x="160"
+                              y="-40"
+                              width="490"
+                              height="60"
+                              fill="none"
+                              stroke="none"
+                              pointer-events="all"></rect>
+                    </g>
+                    <g transform="translate(0.5,0.5)"
+                       style="visibility: visible;">
+                        <rect x="160"
+                              y="970"
+                              width="490"
+                              height="60"
+                              fill="none"
+                              stroke="white"
+                              pointer-events="stroke"
+                              visibility="hidden"
+                              stroke-width="9"></rect>
+                        <rect x="160"
+                              y="970"
+                              width="490"
+                              height="60"
+                              fill="none"
+                              stroke="none"
+                              pointer-events="all"></rect>
+                    </g>
+                </g>
+                <g></g>
+                <g></g>
+            </g>
+        </svg>
+        <div
+             style="position: fixed; overflow: hidden; box-sizing: border-box; white-space: nowrap; padding: 10px 10px 8px; left: 50%; background-color: rgb(0, 0, 0); border-radius: 16px; transition: opacity 600ms ease-in-out 0s; bottom: 20px; transform: translate(-50%, 0px); opacity: 0; display: none;">
+            <span title="Previous Page"
+                  style="padding-left: 0px; padding-right: 4px; cursor: pointer; display: none;"><img border="0"
+                     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMThweCIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMThweCIgZmlsbD0iIzAwMDAwMCI+PHBhdGggZD0iTTAgMGgyNHYyNEgwVjB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE1LjQxIDcuNDFMMTQgNmwtNiA2IDYgNiAxLjQxLTEuNDFMMTAuODMgMTJsNC41OC00LjU5eiIvPjwvc3ZnPg=="
+                     style="width: 36px; filter: invert(100%);"></span>
+            <div
+                 style="font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI Variable&quot;, &quot;Segoe UI&quot;, system-ui, ui-sans-serif, Helvetica, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;; display: none; vertical-align: top; font-weight: bold; margin-top: 8px; font-size: 14px; color: rgb(255, 255, 255);">
+            </div><span title="Next Page"
+                  style="padding-left: 4px; padding-right: 0px; cursor: pointer; display: none;"><img border="0"
+                     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMThweCIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMThweCIgZmlsbD0iIzAwMDAwMCI+PHBhdGggZD0iTTAgMGgyNHYyNEgwVjB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEwIDZMOC41OSA3LjQxIDEzLjE3IDEybC00LjU4IDQuNTlMMTAgMThsNi02LTYtNnoiLz48L3N2Zz4="
+                     style="width: 36px; filter: invert(100%);"></span><span title="Zoom Out (Alt+Mousewheel)"
+                  style="padding-left: 8px; padding-right: 8px; cursor: pointer;"><img border="0"
+                     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTUuNSAxNGgtLjc5bC0uMjgtLjI3QzE1LjQxIDEyLjU5IDE2IDExLjExIDE2IDkuNSAxNiA1LjkxIDEzLjA5IDMgOS41IDNTMyA1LjkxIDMgOS41IDUuOTEgMTYgOS41IDE2YzEuNjEgMCAzLjA5LS41OSA0LjIzLTEuNTdsLjI3LjI4di43OWw1IDQuOTlMMjAuNDkgMTlsLTQuOTktNXptLTYgMEM3LjAxIDE0IDUgMTEuOTkgNSA5LjVTNy4wMSA1IDkuNSA1IDE0IDcuMDEgMTQgOS41IDExLjk5IDE0IDkuNSAxNHpNNyA5aDV2MUg3eiIvPjwvc3ZnPg=="
+                     style="width: 36px; filter: invert(100%);"></span><span title="Zoom In (Alt+Mousewheel)"
+                  style="padding-left: 8px; padding-right: 8px; cursor: pointer;"><img border="0"
+                     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTUuNSAxNGgtLjc5bC0uMjgtLjI3QzE1LjQxIDEyLjU5IDE2IDExLjExIDE2IDkuNSAxNiA1LjkxIDEzLjA5IDMgOS41IDNTMyA1LjkxIDMgOS41IDUuOTEgMTYgOS41IDE2YzEuNjEgMCAzLjA5LS41OSA0LjIzLTEuNTdsLjI3LjI4di43OWw1IDQuOTlMMjAuNDkgMTlsLTQuOTktNXptLTYgMEM3LjAxIDE0IDUgMTEuOTkgNSA5LjVTNy4wMSA1IDkuNSA1IDE0IDcuMDEgMTQgOS41IDExLjk5IDE0IDkuNSAxNHptMi41LTRoLTJ2Mkg5di0ySDdWOWgyVjdoMXYyaDJ2MXoiLz48L3N2Zz4="
+                     style="width: 36px; filter: invert(100%);"></span><span title="Fit"
+                  style="padding-left: 8px; padding-right: 8px; cursor: pointer;"><img border="0"
+                     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMThweCIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMThweCIgZmlsbD0iIzAwMDAwMCI+PHBhdGggZD0iTTAgMGgyNHYyNEgwVjB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTUgMTVIM3Y0YzAgMS4xLjkgMiAyIDJoNHYtMkg1di00ek01IDVoNFYzSDVjLTEuMSAwLTIgLjktMiAydjRoMlY1em03IDNjLTIuMjEgMC00IDEuNzktNCA0czEuNzkgNCA0IDQgNC0xLjc5IDQtNC0xLjc5LTQtNC00em0wIDZjLTEuMSAwLTItLjktMi0ycy45LTIgMi0yIDIgLjkgMiAyLS45IDItMiAyem03LTExaC00djJoNHY0aDJWNWMwLTEuMS0uOS0yLTItMnptMCAxNmgtNHYyaDRjMS4xIDAgMi0uOSAyLTJ2LTRoLTJ2NHoiLz48L3N2Zz4="
+                     style="width: 36px; filter: invert(100%);"></span><span title="Layers"
+                  style="padding-left: 8px; padding-right: 8px; cursor: pointer; display: none;"><img border="0"
+                     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMThweCIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMThweCIgZmlsbD0iIzAwMDAwMCI+PHBhdGggZD0iTTAgMGgyNHYyNEgwVjB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTExLjk5IDE4LjU0bC03LjM3LTUuNzNMMyAxNC4wN2w5IDcgOS03LTEuNjMtMS4yN3pNMTIgMTZsNy4zNi01LjczTDIxIDlsLTktNy05IDcgMS42MyAxLjI3TDEyIDE2em0wLTExLjQ3TDE3Ljc0IDkgMTIgMTMuNDcgNi4yNiA5IDEyIDQuNTN6Ii8+PC9zdmc+"
+                     style="width: 36px; filter: invert(100%);"></span><span title="Tags"
+                  style="padding-left: 8px; padding-right: 8px; cursor: pointer; display: none;"><img border="0"
+                     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI0IDI0IiBoZWlnaHQ9IjE4cHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjE4cHgiIGZpbGw9IiMwMDAwMDAiPjxnPjxwYXRoIGQ9Ik0wLDBoMjR2MjRIMFYweiIgZmlsbD0ibm9uZSIvPjwvZz48Zz48Zz48cGF0aCBkPSJNMjEuNDEsMTEuNDFsLTguODMtOC44M0MxMi4yMSwyLjIxLDExLjcsMiwxMS4xNywySDRDMi45LDIsMiwyLjksMiw0djcuMTdjMCwwLjUzLDAuMjEsMS4wNCwwLjU5LDEuNDFsOC44Myw4LjgzIGMwLjc4LDAuNzgsMi4wNSwwLjc4LDIuODMsMGw3LjE3LTcuMTdDMjIuMiwxMy40NiwyMi4yLDEyLjIsMjEuNDEsMTEuNDF6IE0xMi44MywyMEw0LDExLjE3VjRoNy4xN0wyMCwxMi44M0wxMi44MywyMHoiLz48Y2lyY2xlIGN4PSI2LjUiIGN5PSI2LjUiIHI9IjEuNSIvPjwvZz48L2c+PC9zdmc+"
+                     style="width: 36px; filter: invert(100%);"></span><span title="Print"
+                  style="padding-left: 8px; padding-right: 8px; cursor: pointer;"><img border="0"
+                     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMThweCIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMThweCIgZmlsbD0iIzAwMDAwMCI+PHBhdGggZD0iTTAgMGgyNHYyNEgwVjB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE5IDhoLTFWM0g2djVINWMtMS42NiAwLTMgMS4zNC0zIDN2Nmg0djRoMTJ2LTRoNHYtNmMwLTEuNjYtMS4zNC0zLTMtM3pNOCA1aDh2M0g4VjV6bTggMTJ2Mkg4di00aDh2MnptMi0ydi0ySDZ2Mkg0di00YzAtLjU1LjQ1LTEgMS0xaDE0Yy41NSAwIDEgLjQ1IDEgMXY0aC0yeiIvPjxjaXJjbGUgY3g9IjE4IiBjeT0iMTEuNSIgcj0iMSIvPjwvc3ZnPg=="
+                     style="width: 36px; filter: invert(100%);"></span><span title="Export"
+                  style="padding-left: 8px; padding-right: 8px; cursor: pointer;"><img border="0"
+                     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMThweCIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMThweCIgZmlsbD0iIzAwMDAwMCI+PHBhdGggZD0iTTAgMGgyNHYyNEgwVjB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE0LjEyIDRsMS44MyAySDIwdjEySDRWNmg0LjA1bDEuODMtMmg0LjI0TTE1IDJIOUw3LjE3IDRINGMtMS4xIDAtMiAuOS0yIDJ2MTJjMCAxLjEuOSAyIDIgMmgxNmMxLjEgMCAyLS45IDItMlY2YzAtMS4xLS45LTItMi0yaC0zLjE3TDE1IDJ6bS0zIDdjMS42NSAwIDMgMS4zNSAzIDNzLTEuMzUgMy0zIDMtMy0xLjM1LTMtMyAxLjM1LTMgMy0zbTAtMmMtMi43NiAwLTUgMi4yNC01IDVzMi4yNCA1IDUgNSA1LTIuMjQgNS01LTIuMjQtNS01LTV6Ii8+PC9zdmc+"
+                     style="width: 36px; filter: invert(100%);"></span><span title="Edit"
+                  style="padding-left: 8px; padding-right: 8px; cursor: pointer;"><img border="0"
+                     src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGhlaWdodD0iMThweCIgdmlld0JveD0iMCAwIDI0IDI0IiB3aWR0aD0iMThweCIgZmlsbD0iIzAwMDAwMCI+PHBhdGggZD0iTTAgMGgyNHYyNEgwVjB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE0LjA2IDkuMDJsLjkyLjkyTDUuOTIgMTlINXYtLjkybDkuMDYtOS4wNk0xNy42NiAzYy0uMjUgMC0uNTEuMS0uNy4yOWwtMS44MyAxLjgzIDMuNzUgMy43NSAxLjgzLTEuODNjLjM5LS4zOS4zOS0xLjAyIDAtMS40MWwtMi4zNC0yLjM0Yy0uMi0uMi0uNDUtLjI5LS43MS0uMjl6bS0zLjYgMy4xOUwzIDE3LjI1VjIxaDMuNzVMMTcuODEgOS45NGwtMy43NS0zLjc1eiIvPjwvc3ZnPg=="
+                     style="width: 36px; filter: invert(100%);"></span>
+        </div>
+    </div>
+</body>
+
+</html>
